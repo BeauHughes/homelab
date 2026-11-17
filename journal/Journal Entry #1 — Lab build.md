@@ -21,9 +21,9 @@ Administrator on DC01, user on CL01.
 - Full VM wizard, not Quick Create: needed control over memory and adapters.
 
 ## What broke and how I fixed it
-- Symptom: Console login to FW01 failed with the password I had saved.
-- Cause: The root password was never changed during install, so it was still the OPNsense default (opnsense).
-- Fix (exact command/setting): Logged in with the default, then changed it to a strong password and saved it.
+- Symptom: After a reboot, FW01 rejected my password and DC01 lost internet (“Destination host unreachable”).
+- Cause: OPNsense was running from the installer in memory, not installed to disk, so its configuration disappeared on reboot.
+- Fix: Installed OPNsense to disk, removed the ISO, and reconfigured.
 
 - Symptom: Quick Create only let me attach FW01 to one virtual switch, but it needs three.
 - Cause: Hyper-V only connects one network adapter when a VM is created (Quick Create
