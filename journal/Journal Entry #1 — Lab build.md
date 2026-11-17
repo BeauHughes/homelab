@@ -1,4 +1,4 @@
-# Journal Entry #1 — Lab build (Nov 16–22, 2026)
+# Journal Entry #1 — Lab build
 
 ## What I built
 Hyper-V lab with a firewall, a server and a client on two subnets.
