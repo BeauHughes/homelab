@@ -17,13 +17,15 @@ $logFile = "C:\Lab\Logs\NewHires.log"
 $base = ($FirstName.Substring(0,1) + $LastName).ToLower() -replace '[^a-z0-9]', ''
 $sam = $base; $n = 1
 while (Get-ADUser -Filter "SamAccountName -eq '$sam'") { $n++; $sam = "$base$n" }
+# AD object names must also be unique within an OU, so add the username when it needed a number
+$cn = if ($sam -eq $base) { "$FirstName $LastName" } else { "$FirstName $LastName ($sam)" }
 
 # Temporary password: 12 random characters plus one uppercase, digit and symbol
 $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789'
 $plain = (-join (1..12 | ForEach-Object { $chars[(Get-Random -Maximum $chars.Length)] })) + 'K7!'
 $secure = ConvertTo-SecureString $plain -AsPlainText -Force
 
-New-ADUser -Name "$FirstName $LastName" -GivenName $FirstName -Surname $LastName `
+New-ADUser -Name $cn -DisplayName "$FirstName $LastName" -GivenName $FirstName -Surname $LastName `
   -SamAccountName $sam -UserPrincipalName "$sam@lab.internal" `
   -Department $Department -Title $Title `
   -Path "OU=$Department,OU=LAB,DC=lab,DC=internal" `
